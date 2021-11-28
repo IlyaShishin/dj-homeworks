@@ -7,11 +7,29 @@ def index(request):
 
 
 def show_catalog(request):
+    sort = request.GET.get('sort')
     template = 'catalog.html'
-    context = {
-        'phones': Phone.objects.all
-    }
-    return render(request, template, context)
+    if sort:
+        if sort == 'name':
+            context = {
+                'phones': Phone.objects.all().order_by('name')
+            }
+            return render(request, template, context)
+        elif sort == 'min_price':
+            context = {
+                'phones': Phone.objects.all().order_by('price')
+            }
+            return render(request, template, context)
+        elif sort == 'max_price':
+            context = {
+                'phones': Phone.objects.all().order_by('-price')
+            }
+            return render(request, template, context)
+    else:
+        context = {
+            'phones': Phone.objects.all
+        }
+        return render(request, template, context)
 
 
 def show_product(request, slug):
